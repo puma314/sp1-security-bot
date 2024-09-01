@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Octokit } from '@octokit/rest';
-// import { createAppAuth } from '@octokit/auth-app';
+import { createAppAuth } from '@octokit/auth-app';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { OpenAI } from 'openai';
@@ -17,18 +17,17 @@ app.use(bodyParser.json());
 let octokit: Octokit;
 
 if (process.env.GITHUB_APP_ID && process.env.GITHUB_PRIVATE_KEY && process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
-    throw new Error("GitHub App authentication is not yet supported.");
-    // TODO: fill this in once imports are working
     // Authenticate using GitHub App
-    // octokit = new Octokit({
-    //     authStrategy: createAppAuth, 
-    //     auth: {
-    //         appId: process.env.GITHUB_APP_ID,
-    //         privateKey: process.env.GITHUB_PRIVATE_KEY,
-    //         clientId: process.env.GITHUB_CLIENT_ID,
-    //         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    //     },
-    // });
+    octokit = new Octokit({
+        authStrategy: createAppAuth,
+        auth: {
+            appId: process.env.GITHUB_APP_ID,
+            privateKey: process.env.GITHUB_PRIVATE_KEY,
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        },
+    });
+    console.log("Authenticated using GitHub App");
 } else if (process.env.GITHUB_TOKEN) {
     // Authenticate using Personal Access Token (PAT)
     octokit = new Octokit({
