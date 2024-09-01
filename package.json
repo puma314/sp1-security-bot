@@ -4,6 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "nodemon",
+    "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
