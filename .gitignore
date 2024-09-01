@@ -18,6 +18,8 @@ build/
 .env
 .env.local
 
+*.pem
+
 # Ignore log files
 *.log
 

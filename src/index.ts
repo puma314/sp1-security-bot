@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Octokit } from '@octokit/rest';
+// import { createAppAuth } from '@octokit/auth-app';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { OpenAI } from 'openai';
@@ -13,7 +14,30 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+let octokit: Octokit;
+
+if (process.env.GITHUB_APP_ID && process.env.GITHUB_PRIVATE_KEY && process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    // Authenticate using GitHub App
+    // octokit = new Octokit({
+    //     authStrategy: createAppAuth, 
+    //     auth: {
+    //         appId: process.env.GITHUB_APP_ID,
+    //         privateKey: process.env.GITHUB_PRIVATE_KEY,
+    //         clientId: process.env.GITHUB_CLIENT_ID,
+    //         clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    //     },
+    // });
+    throw new Error("GitHub App authentication is not yet supported.");
+} else if (process.env.GITHUB_TOKEN) {
+    // Authenticate using Personal Access Token (PAT)
+    octokit = new Octokit({
+        auth: process.env.GITHUB_TOKEN,
+    });
+    console.log("Authenticated using Personal Access Token");
+} else {
+    throw new Error("No authentication method provided. Please set GITHUB_TOKEN or GITHUB_APP_ID, GITHUB_PRIVATE_KEY, GITHUB_CLIENT_ID, and GITHUB_CLIENT_SECRET.");
+}
+
 const client = new OpenAI();
 
 const kalosPath = path.join(__dirname, 'assets', 'kalos.md'); 
@@ -93,10 +117,15 @@ app.post('/', async (req, res) => {
         issue_number: pr.number,
         body: `**Security Bot Review:**\n\n${review.content}`, 
       });
+
+      res.status(200).json({ review: review.content });
+      return;
+    } else {
+        res.status(200).json({ resp: "PR not opened or edited" }).end();
     }
   }
 
-  res.status(200).end();
+  res.status(200).json({ resp: "PR not opened or edited" }).end();
 });
 
 app.listen(process.env.PORT || 3000, () => {
