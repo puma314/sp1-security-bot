@@ -2,8 +2,9 @@
   "name": "github-pr-reviewer",
   "version": "1.0.0",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "nodemon",
+    "start": "tsx watch src/index.ts",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -27,7 +28,6 @@
     "@types/body-parser": "^1.19.5",
     "@types/express": "^4.17.13",
     "@types/node": "^16.11.11",
-    "nodemon": "^3.1.4",
     "prettier": "^3.3.3"
   }
 }

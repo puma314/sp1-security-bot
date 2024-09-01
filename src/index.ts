@@ -40,7 +40,7 @@ if (process.env.GITHUB_APP_ID && process.env.GITHUB_PRIVATE_KEY && process.env.G
 
 const client = new OpenAI();
 
-const kalosPath = path.join(__dirname, 'assets', 'kalos.md'); 
+const kalosPath = path.join('assets', 'kalos.md');
 const previousAudits = fs.readFileSync(kalosPath, 'utf8');
 
 const prompt =
