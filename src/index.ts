@@ -17,6 +17,8 @@ app.use(bodyParser.json());
 let octokit: Octokit;
 
 if (process.env.GITHUB_APP_ID && process.env.GITHUB_PRIVATE_KEY && process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    throw new Error("GitHub App authentication is not yet supported.");
+    // TODO: fill this in once imports are working
     // Authenticate using GitHub App
     // octokit = new Octokit({
     //     authStrategy: createAppAuth, 
@@ -27,7 +29,6 @@ if (process.env.GITHUB_APP_ID && process.env.GITHUB_PRIVATE_KEY && process.env.G
     //         clientSecret: process.env.GITHUB_CLIENT_SECRET,
     //     },
     // });
-    throw new Error("GitHub App authentication is not yet supported.");
 } else if (process.env.GITHUB_TOKEN) {
     // Authenticate using Personal Access Token (PAT)
     octokit = new Octokit({
